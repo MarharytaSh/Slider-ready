@@ -1,0 +1,76 @@
+section{
+    width:800px;
+    height:650px;
+    background: aliceblue ;
+    margin:0 auto;
+    position:relative;
+}
+#mainImg{
+    width:80%;
+    height:400px;
+    margin:0 auto;
+    margin-bottom:20px;
+    text-align: center;
+    overflow: hidden;
+
+}
+img{
+
+    height:100%;
+}
+#typeNumber{
+    width:70%;
+    height:30px;
+    margin:0 auto;
+    text-align: center;
+    margin-bottom:20px;
+}
+input{
+    height:25px;
+    background: whitesmoke;
+    width:100px;
+    border:2px solid steelblue;;
+
+}
+#lineWithImgs{
+    width:95%;
+    height:170px;
+    background: steelblue;
+    margin:0 auto;
+
+}
+ .divImgLenta:first-child{
+    margin-left:10px;
+}
+.divImgLenta{
+    background:orange;
+    width:140px;
+    height:120px;
+    margin-right:10px;
+    margin-top:25px;
+    display: inline-block;
+}
+.imgLenta{
+    width:140px;
+    height:120px;
+    margin-right:10px;
+    /*margin-top:25px;*/
+    cursor:pointer;
+}
+#nazad, #dalee{
+    background:  steelblue;
+    border:none;
+    color: honeydew;
+    cursor:pointer;
+    top:25%;
+    width:50px;
+    height:60px;
+}
+#nazad{
+    margin-left:10px;
+    position:absolute;
+}
+#dalee{
+    right:10px;
+    position:absolute;
+}

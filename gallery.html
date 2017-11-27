@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="styleForGallery.css" type="text/css">
+</head>
+<body>
+    <section>
+        <button id="nazad">Назад</button>
+            <div id="mainImg"></div>
+            <button id="dalee">Далее</button>
+
+        <div id="typeNumber"><input type="text" placeholder="type number"></div>
+        <div id="lineWithImgs"></div>
+    </section>
+<script>
+
+    class Imags {
+        constructor(arr){
+            this.ListImags = arr;
+        }
+    }
+    class ProcessForView {
+        makeIMGMain_AsDefault(imags){
+            for (var key in imags){
+              this.readyImg = imags[key][0];
+            }
+        }
+        click_nazad_vpered(clickVpered, imags){
+            for (var key in imags){
+                this.readyImg = imags[key][clickVpered];
+            }
+        }
+        checkCorrectInput (clickVpered, imags){
+            for (var key in imags){
+                if(imags[key][clickVpered]){
+                    return true;
+                }else {return false;}
+            }
+        }
+        makeNumberFromStr (clickVpered){
+            var aarWithNambers = ['one', 'two', 'three', 'four', 'five'];
+            for (var i = 0; i<aarWithNambers.length; i++){
+                if(aarWithNambers[i]=== clickVpered){
+                    return i;
+                }
+            }
+        }
+        changeMainImg(imags, clickVpered){
+            for (var key in imags){
+                this.readyImg = imags[key][clickVpered];
+            }
+        }
+    }
+    class View {
+        outputMainImgAsDEfault (readyImg){
+            if($('#mainImg').html()){
+                $('#mainImg img').attr('src', readyImg);
+            }else {
+                $('#mainImg').append('<img src="' + readyImg + '">');
+                $('img').attr({'height': '100%'});
+            }
+        }
+        outputMainImgAsDEfaultAnimation (readyImg){
+            if($('#mainImg').html()){
+                $('#mainImg img').attr('src', readyImg);
+                $('#mainImg img').animate({'margin-left':'0'},100, 'linear');
+                $('#mainImg img').fadeTo("fast", 1)
+            }
+        }
+        outputErrorForInput (){
+            if(!$("span").is("#spanErrorMessage")){
+                $('#typeNumber').append('<span id="spanErrorMessage">Uncorect date!</span>');
+                //console.log($('#typeNumber'));
+                setTimeout(function(){
+                    $('#spanErrorMessage').remove();
+                },1000);
+
+            }
+        }
+        outputRibbon (imags, Target){
+            if(typeof Target === 'undefined') {
+                for (var key in imags) {
+                    for (var x = 0; x < imags[key].length; x++) {
+                        $('#lineWithImgs').append('<div class="divImgLenta"><img src="' + imags[key][x] + '"' + 'class="imgLenta"' + 'id="' + x + '"' + '></div>');
+                    }
+                    $('.imgLenta').on('click', controller.LentaClick.bind(controller));
+                }
+            }
+            else if(typeof Target !== 'undefined'){
+                    $(Target).css('width', $(Target).width() - 4);
+                    $(Target).css({'border': '2px solid orange', 'height': $(Target).height() - 4 }).fadeTo('fast', 0.5);
+            }
+        }
+
+    }
+    class Controller {
+        constructor(imags){
+            this.imags = imags;
+            this.clickVpered = 0;
+        }
+        toMakeMainImg(){
+            $('#nazad').on('click', controller.click_nazad_vpered.bind(controller));
+            $('#dalee').on('click', controller.click_nazad_vpered.bind(controller));
+            processForView.makeIMGMain_AsDefault( this.imags);
+            view.outputMainImgAsDEfault(processForView.readyImg);
+        }
+       click_nazad_vpered(){
+           console.log(this.clickVpered);
+           this.clickVpered =  Number(this.clickVpered);
+           if($(event.target).text() === 'Далее'){//3
+               $('#mainImg img').css('margin-left', '-200%');
+                this.clickVpered +=1;
+           }else if($(event.target).text() === 'Назад'){
+               console.log('nazad');
+               $('#mainImg img').css('margin-left', '200%');
+                this.clickVpered -=1;
+           }
+
+           processForView.click_nazad_vpered(this.clickVpered, this.imags);
+
+           if(this.clickVpered < 0){
+               $('#mainImg img').removeAttr('style');
+               this.clickVpered = 0;
+               view.outputMainImgAsDEfault(processForView.readyImg);
+           }
+           else if(this.clickVpered === 0){
+               this.clickVpered = 0;
+               $('#mainImg img').fadeTo("fast", 0.3);
+               view.outputMainImgAsDEfaultAnimation(processForView.readyImg);
+           }
+           else if(this.clickVpered > 4){
+               $('#mainImg img').removeAttr('style');
+               this.clickVpered = 4;
+               view.outputMainImgAsDEfault(processForView.readyImg);
+           }
+           else if(this.clickVpered === 4){
+               this.clickVpered = 4;
+               $('#mainImg img').fadeTo("fast", 0.3);
+               view.outputMainImgAsDEfaultAnimation(processForView.readyImg);
+           }else{
+               $('#mainImg img').fadeTo("fast", 0.3);
+               view.outputMainImgAsDEfaultAnimation(processForView.readyImg);
+           }
+
+        }
+        showImgFromInput (){
+           if(isNaN(Number($('input').val()))){
+              this.clickVpered = Number(processForView.makeNumberFromStr($('input').val()));
+
+           }else {
+                this.clickVpered = Number($('input').val())-1;
+           }
+            if(this.clickVpered === -1){
+                this.clickVpered = 0;
+            }
+            if (processForView.checkCorrectInput(this.clickVpered, this.imags)){
+                    processForView.click_nazad_vpered(this.clickVpered, this.imags);
+                   view.outputMainImgAsDEfault(processForView.readyImg);
+            }else {
+                view.outputErrorForInput();
+            }
+        }
+        toMakeRibbon(){
+            view.outputRibbon(this.imags);
+        }
+        LentaClick(){
+            if(typeof this.TargetImgLenta !== 'undefined'){
+                $(this.TargetImgLenta).removeAttr('style');
+                this.TargetImgLenta = event.currentTarget
+            }
+            else if (typeof this.TargetImgLenta === 'undefined'){
+                this.TargetImgLenta = event.currentTarget
+            }
+
+            this.clickVpered = event.currentTarget.id;
+            processForView.click_nazad_vpered(this.clickVpered, this.imags);
+            view.outputRibbon(this.imags, event.currentTarget);
+            view.outputMainImgAsDEfault(processForView.readyImg);
+
+        }
+    }
+
+    var arr = ['imgs/1.jpg', 'imgs/2.jpg', 'imgs/3.jpg', 'imgs/4.jpg', 'imgs/5.jpg'];
+    var imags = new Imags(arr);
+    var processForView = new ProcessForView ();
+    var view = new View();
+    var controller = new Controller(imags);
+
+    controller.toMakeMainImg();
+    controller.toMakeRibbon();
+
+    $('input').on('keyup',controller.showImgFromInput.bind(controller));
+
+
+</script>
+
+</body>
+</html>
